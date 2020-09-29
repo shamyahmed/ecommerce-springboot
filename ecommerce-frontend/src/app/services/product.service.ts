@@ -21,6 +21,14 @@ export class ProductService {
       map(response => response._embedded.products)
     );
   }
+
+  searchProducts(keyword: string) {
+    const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${keyword}`;
+
+    return this.httpClient.get<GetResponse>(searchUrl).pipe(
+      map(response => response._embedded.products)
+    );
+  }
 }
 
 interface GetResponse {
