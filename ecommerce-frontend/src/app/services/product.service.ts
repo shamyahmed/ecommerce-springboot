@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProductService {
-
+  
   private baseUrl = 'http://localhost:8080/api/products';
 
   constructor(private httpClient: HttpClient) { }
@@ -28,6 +28,10 @@ export class ProductService {
     return this.httpClient.get<GetResponse>(searchUrl).pipe(
       map(response => response._embedded.products)
     );
+  }
+
+  getProduct(productId: number) {
+    return this.httpClient.get<Product>(`${this.baseUrl}/${productId}`);
   }
 }
 
