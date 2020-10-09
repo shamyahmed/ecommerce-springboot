@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    environment {
+        JAVA_APP = "ecommerce-backend"
+        APPLICATION_PATH = "${env.WORKSPACE}/${JAVA_APP}"
+        PRODUCTION = "production-container"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh "${env.WORKSPACE}/jenkins/build.sh ${APPLICATION_PATH}"
+            }
+
+            post {
+                success {
+                   archiveArtifacts artifacts: "${JAVA_APP}/target/*.jar", fingerprint: true
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                sh "${env.WORKSPACE}/jenkins/test.sh ${APPLICATION_PATH}"
+            }
+
+            post {
+                always {
+                    junit "${JAVA_APP}/target/surefire-reports/*.xml"
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh "${env.WORKSPACE}/jenkins/deploy.sh ${APPLICATION_PATH} ${PRODUCTION}"
+            }
+        }
+    }
+}
