@@ -1,1 +1,1 @@
-# ecommerce-angular-springboot
+# ecommerce-springboot
